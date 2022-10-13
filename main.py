@@ -9,3 +9,4 @@ def Nombre_Liste (nombre):
         longueur_nombre = longueur_nombre - 1
         x.append(int(str(nombre)[longueur_nombre]))
     return x
+print ("test")
