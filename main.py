@@ -25,8 +25,9 @@ def Multiplication_Ecoleprimaire (x,y):
     nb2_liste = Nombre_Liste(y)
 
     # boucle pour les multiplications
-    for i in range (4):
-        print (i)
+    for i in range (t1):
+        for j in range (t2):
+          nb1_liste[i]*nb2_liste[j]  
 
 
 
