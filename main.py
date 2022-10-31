@@ -70,49 +70,56 @@ def racines_un(n):
 
 
 # fonction pour évaluer un polynôme en ces 2n racines de l'unité
-def FFT1(P, c):     # on dit que P c'est une liste c'est plus pratique
+def FFT(P, c):     # on dit que P c'est une liste c'est plus pratique
     # si c = 1 on fait toute la liste * z
     # si c = 0 on fait rien
     liste_racine_unite = []
     liste_racine_unite = racines_un(len(P))     # on récupère le nombre de racines de l'unité voulu
     liste_polynome_evalue = []      # liste retournée à la fin
 
-    for o in range (len(liste_racine_unite)):       # on met déjà x_0 partout pcq ça dépend pas de w
+    for o in range (len(liste_racine_unite)):       # on met déjà x_0 partout pcq ça dépend pas de w et sinon ça fai une erreur avec log(0) en dessous
         liste_polynome_evalue.append(liste_P[0])
     #print (liste_polynome_evalue)
 
-    for k in range (len(liste_racine_unite)):       # de 0 à 2n-1
+    for k in range (len(liste_racine_unite)):       # de 0 à 2n-1 (pour toutes les racines unité on évalue le polynome en ces racines)
         w = liste_racine_unite[k]       # une des racines de l'unité
-        w2 = w*w     # pour avoir z²
+        w2 = w*w     # pour avoir z² comme dans l'énoncé
 
-        for i in range (1,len(P)):        # de 0 à n-1
+        for i in range (1,len(P)):        # de 0 à n-1 (pour tous les coeff du polynome à part le 0, mais traité avant donc oklm)
             x = P[i]        # x indice i  
-            w2_puissance_i = cmath.exp(w2 * cmath.log(i))
+            w2_puissance_i = cmath.exp(w2 * cmath.log(i))       # on fait w^(2i)
             liste_polynome_evalue[k]  = liste_polynome_evalue[k] + x * w2_puissance_i     # P(w) = x_0 * w^0 + x_1 * w^1 + ...
                   
-        if c == 1:
+        if c == 1:      # si c'est la liste du polynome impaire faut faire tout * z (ici z = w)
             for s in range (len(liste_polynome_evalue)):
                 liste_polynome_evalue[s] = liste_polynome_evalue[s] * w
 
+    # à la fin c'est une liste avec pour chaque case, le polynome évalué en une des 2n racines de l'unité ( *z si c'est P^(i) )
     return liste_polynome_evalue
 
 
 # fonction qui scinde le polynome en deux et évalue et tout et tout
-def FFT2(P):
+def FFT_finale(P):
     liste_polynomes_separes = separation_polynome_paire_impaire(P)
     liste_polynome_paire_evalue = []
     liste_polynome_impaire_evalue = []
+    liste_polynome_evalue = []
 
-    liste_polynome_paire_evalue = FFT1(liste_polynomes_separes[0], 0)
-    liste_polynome_impaire_evalue = FFT1(liste_polynomes_separes[1], 1)
+    liste_polynome_paire_evalue = FFT(liste_polynomes_separes[0], 0)
+    liste_polynome_impaire_evalue = FFT(liste_polynomes_separes[1], 1)
+    # donc là on a chaque liste avec le polynome évalué en les 2n racines de l'unité
+    # i.e. les deux parties de l'addition suivante
+    # P(z) = P^(p)(z) + zP^(i)(z)
+    # on additionne tout membre à membre et c'est ok on aura ce qu'on veut
+    
+    # print pour tester
+    #print(liste_polynome_paire_evalue)
+    #print(liste_polynome_impaire_evalue)
 
-    print(liste_polynome_paire_evalue)
-    print(liste_polynome_impaire_evalue)
+    for k in range (len(liste_polynome_paire_evalue)):       # ils doivent faire la même longueur donc c'est ok de mettre ça
+        liste_polynome_evalue.append( liste_polynome_paire_evalue[k] + liste_polynome_impaire_evalue[k] )
 
-    #for k in range (liste_polynome_paire_evalue):
-
-
-
+    return liste_polynome_evalue
 
 
 
@@ -124,4 +131,6 @@ def FFT2(P):
 
 #print (racines_un(10))
 
-print(FFT2(liste_P))
+print (FFT(liste_P,0))
+print ("-------------------------------------------------------------------------------")
+print (FFT_finale(liste_P))
