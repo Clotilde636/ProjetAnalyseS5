@@ -33,7 +33,7 @@ def Multiplication_Ecoleprimaire (x,y):
           nb1_liste[i]*nb2_liste[j]  
 
 # polynome 8 + 8x + 2x² + 0x^3 + 4x^4 + 5x^5
-liste_P = [8,8,2,0,4,5]
+liste_P = [8,6,2,0,4,5,1,2]
 
 # fonction pour avoir les polynomes P^(i) et P^(p)
 def separation_polynome_paire_impaire(liste_P):
@@ -68,11 +68,12 @@ def racines_un(n):
     #print(k)
     return liste_racines
 
+
 # fonction pour évaluer un polynôme en ces 2n racines de l'unité
 def FFT(P):     # on dit que P c'est une liste c'est plus pratique
     liste_racine_unite = []
     liste_racine_unite = racines_un(len(P))     # on récupère le nombre de racines de l'unité voulu
-    liste_polynome_evalue = []
+    liste_polynome_evalue = []      # liste retournée à la fin
 
     for o in range (len(liste_racine_unite)):       # on met déjà x_0 partout pcq ça dépend pas de w
         liste_polynome_evalue.append(liste_P[0])
