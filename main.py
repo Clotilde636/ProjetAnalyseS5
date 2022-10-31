@@ -1,4 +1,7 @@
 from random import *
+from math import *
+#from cmath import *
+import cmath
 
 #Fonction qui transforme un nombre en liste
 def Nombre_Liste (nombre):
@@ -32,6 +35,7 @@ def Multiplication_Ecoleprimaire (x,y):
 # polynome 8 + 8x + 2x² + 0x^3 + 4x^4 + 5x^5
 liste_P = [8,8,2,0,4,5]
 
+# fonction pour avoir les polynomes P^(i) et P^(p)
 def separation_polynome_paire_impaire(liste_P):
     liste_P_paire = []
     liste_P_impaire = []
@@ -39,9 +43,11 @@ def separation_polynome_paire_impaire(liste_P):
 
     for i in range (0, len(liste_P)-1, 2):
         liste_P_paire.append(liste_P[i])
-        print(liste_P_paire)
+        liste_P_paire.append(0)
+        #print(liste_P_paire)
+        liste_P_impaire.append(0)
         liste_P_impaire.append(liste_P[i+1])
-        print(liste_P_impaire)
+        #print(liste_P_impaire)
     
     liste_P_finale.append(liste_P_paire)
     liste_P_finale.append(liste_P_impaire)
@@ -49,8 +55,46 @@ def separation_polynome_paire_impaire(liste_P):
     return liste_P_finale
 
 
+# fonction pour générer les 2n racines de l'unité
+def racines_un(n):
+    liste_racines = []
+    # n c'est la longueur du polynôme donc degré n-1
+
+    for k in range (2*n):
+        w = cmath.exp((2*pi)/(2*n) * 1j * k)
+        #print (w)
+        liste_racines.append(w)
+
+    #print(k)
+    return liste_racines
+
+# fonction pour évaluer un polynôme en ces 2n racines de l'unité
+def FFT(P):     # on dit que P c'est une liste c'est plus pratique
+    liste_racine_unite = []
+    liste_racine_unite = racines_un(len(P))     # on récupère le nombre de racines de l'unité voulu
+    liste_polynome_evalue = []
+
+    for o in range (len(liste_racine_unite)):       # on met déjà x_0 partout pcq ça dépend pas de w
+        liste_polynome_evalue.append(liste_P[0])
+    #print (liste_polynome_evalue)
+
+    for k in range (len(liste_racine_unite)):       # de 0 à 2n-1
+        w = liste_racine_unite[k]       # une des racines de l'unité
+
+        for i in range (1,len(P)):        # de 0 à n-1
+            x = P[i]        # x indice i  
+            w_puissance_i = cmath.exp(w * cmath.log(i))  
+            liste_polynome_evalue[k] =  liste_polynome_evalue[k] + x * w_puissance_i        # P(w) = x_0 * w^0 + x_1 * w^1 + ...
+
+    return liste_polynome_evalue
+
+
 ############################################ EXECUTION #############################################
 
 #print (Multiplication_Ecoleprimaire(3,4))
 
 print(separation_polynome_paire_impaire(liste_P))
+
+#print (racines_un(10))
+
+#print(FFT(liste_P))
