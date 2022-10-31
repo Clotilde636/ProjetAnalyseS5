@@ -70,7 +70,7 @@ def racines_un(n):
 
 
 # fonction pour évaluer un polynôme en ces 2n racines de l'unité
-def FFT(P):     # on dit que P c'est une liste c'est plus pratique
+def FFT1(P):     # on dit que P c'est une liste c'est plus pratique
     liste_racine_unite = []
     liste_racine_unite = racines_un(len(P))     # on récupère le nombre de racines de l'unité voulu
     liste_polynome_evalue = []      # liste retournée à la fin
@@ -89,13 +89,20 @@ def FFT(P):     # on dit que P c'est une liste c'est plus pratique
 
     return liste_polynome_evalue
 
+# fonction qui scinde le polynome en deux et évalue et tout et tout
+def FFT2(P):
+    liste_polynomes_separes = separation_polynome_paire_impaire(P)
+    return (liste_polynomes_separes)
+
+
+
 
 ############################################ EXECUTION #############################################
 
 #print (Multiplication_Ecoleprimaire(3,4))
 
-print(separation_polynome_paire_impaire(liste_P))
+#print(separation_polynome_paire_impaire(liste_P))
 
 #print (racines_un(10))
 
-#print(FFT(liste_P))
+print(FFT2(liste_P))
