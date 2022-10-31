@@ -70,7 +70,9 @@ def racines_un(n):
 
 
 # fonction pour évaluer un polynôme en ces 2n racines de l'unité
-def FFT1(P):     # on dit que P c'est une liste c'est plus pratique
+def FFT1(P, c):     # on dit que P c'est une liste c'est plus pratique
+    # si c = 1 on fait toute la liste * z
+    # si c = 0 on fait rien
     liste_racine_unite = []
     liste_racine_unite = racines_un(len(P))     # on récupère le nombre de racines de l'unité voulu
     liste_polynome_evalue = []      # liste retournée à la fin
@@ -81,18 +83,35 @@ def FFT1(P):     # on dit que P c'est une liste c'est plus pratique
 
     for k in range (len(liste_racine_unite)):       # de 0 à 2n-1
         w = liste_racine_unite[k]       # une des racines de l'unité
+        w2 = w*w     # pour avoir z²
 
         for i in range (1,len(P)):        # de 0 à n-1
             x = P[i]        # x indice i  
-            w_puissance_i = cmath.exp(w * cmath.log(i))  
-            liste_polynome_evalue[k] =  liste_polynome_evalue[k] + x * w_puissance_i        # P(w) = x_0 * w^0 + x_1 * w^1 + ...
+            w2_puissance_i = cmath.exp(w2 * cmath.log(i))
+            liste_polynome_evalue[k]  = liste_polynome_evalue[k] + x * w2_puissance_i     # P(w) = x_0 * w^0 + x_1 * w^1 + ...
+                  
+        if c == 1:
+            for s in range (len(liste_polynome_evalue)):
+                liste_polynome_evalue[s] = liste_polynome_evalue[s] * w
 
     return liste_polynome_evalue
+
 
 # fonction qui scinde le polynome en deux et évalue et tout et tout
 def FFT2(P):
     liste_polynomes_separes = separation_polynome_paire_impaire(P)
-    return (liste_polynomes_separes)
+    liste_polynome_paire_evalue = []
+    liste_polynome_impaire_evalue = []
+
+    liste_polynome_paire_evalue = FFT1(liste_polynomes_separes[0], 0)
+    liste_polynome_impaire_evalue = FFT1(liste_polynomes_separes[1], 1)
+
+    print(liste_polynome_paire_evalue)
+    print(liste_polynome_impaire_evalue)
+
+    #for k in range (liste_polynome_paire_evalue):
+
+
 
 
 
