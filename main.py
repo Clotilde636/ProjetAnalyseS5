@@ -51,9 +51,9 @@ def separation_polynome_paire_impaire(liste_P):
 
     for i in range (0, len(liste_P)-1, 2):
         liste_P_paire.append(liste_P[i])
-        liste_P_paire.append(0)
+        #liste_P_paire.append(0)
         #print(liste_P_paire)
-        liste_P_impaire.append(0)
+        #liste_P_impaire.append(0)
         liste_P_impaire.append(liste_P[i+1])
         #print(liste_P_impaire)
     
@@ -99,7 +99,12 @@ def FFT(P, c):     # on dit que P c'est une liste c'est plus pratique
             # on fait w^(2i) (en passant à l'exponentielle sinon ça marche pas avec les complexes jsp pq)  
             w2_puissance_i = cmath.exp(i * cmath.log(w2))       
             liste_polynome_evalue[k]  = liste_polynome_evalue[k] + x * w2_puissance_i     # P(w) = x_0 * w^0 + x_1 * w^1 + ...
-            print(liste_polynome_evalue[k])
+
+        """ 
+        Ici en vrai je fais des calculs en trop pcq pour le polynome paire les indices impaires c'est 0
+        Et donc je calcule w²^i  pour rien et j'ajoute à ma liste pour rien
+        Mais ça évite de faire deux méthodes FFT donc je laisse par flemme
+        """
                   
         if c == 1:      # si c'est la liste du polynome impaire faut faire tout * z (ici z = w)
             for s in range (len(liste_polynome_evalue)):
@@ -135,6 +140,42 @@ def FFT_finale(P):
 
     return liste_polynome_evalue
 
+# essai avec un programme récursif insh c'est mieux
+def FFTrecursif(P):
+    polynome_P_I = separation_polynome_paire_impaire(P)
+    polynome_P = polynome_P_I[0]
+    polynome_I = polynome_P_I[1]
+
+    n = len(P)
+    nsur2 = n/2
+    #print(nsur2)
+    int(nsur2)
+    #print(nsur2)
+    #print(type(nsur2))
+
+    print(n)
+    if n==1:
+        return P
+
+    else:
+        w = cmath.exp((2*pi)/(2*n) *1j)
+
+        y = []
+        y_P = FFTrecursif(polynome_P)
+        y_I = FFTrecursif(polynome_I)
+
+        for k in range (nsur2):
+            A = y_P[k] + w**k * y_I(k)
+            y.append(A)
+
+        for k in range (nsur2, n):
+            A = y_P[k] - w**k * y_I(k)
+            y.append(A)
+    
+        return y
+
+
+
 
 ## 2.2.4
 # fonction pour faire la multiplication
@@ -167,5 +208,6 @@ def mult_Px_Py(liste_P_x, liste_P_y):
 #print (FFT_finale(liste_P_y))
 
 print ("-------------------------------------------------------------------------------")
-print(mult_Px_Py(liste_P_x,liste_P_y))
+print (FFTrecursif(liste_P_x))
+#print(mult_Px_Py(liste_P_x,liste_P_y))
 print ("-------------------------------------------------------------------------------")
