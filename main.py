@@ -2,6 +2,7 @@ from random import *
 from math import *
 #from cmath import *
 import cmath
+from re import L
 
 #Fonction qui transforme un nombre en liste
 def Nombre_Liste (nombre):
@@ -32,9 +33,16 @@ def Multiplication_Ecoleprimaire (x,y):
         for j in range (t2):
           nb1_liste[i]*nb2_liste[j]  
 
-# polynome 8 + 8x + 2x² + 0x^3 + 4x^4 + 5x^5
-liste_P = [8,6,2,0,4,5,1,2]
 
+# polynome 8 + 6x + 2x² + 0x^3 + 4x^4 + 5x^5 + 1x^6 + 2x^7
+liste_P_x = [8,6,2,0,4,5,1,2]
+#print(liste_P_x)
+# polynome avec les coefficients dans l'autre sens
+liste_P_y = [2,1,5,4,0,2,6,8]
+#print(liste_P_y)
+
+
+## 2.2.2
 # fonction pour avoir les polynomes P^(i) et P^(p)
 def separation_polynome_paire_impaire(liste_P):
     liste_P_paire = []
@@ -55,6 +63,7 @@ def separation_polynome_paire_impaire(liste_P):
     return liste_P_finale
 
 
+## 2.2.3
 # fonction pour générer les 2n racines de l'unité
 def racines_un(n):
     liste_racines = []
@@ -67,6 +76,7 @@ def racines_un(n):
 
     #print(k)
     return liste_racines
+
 
 
 # fonction pour évaluer un polynôme en ces 2n racines de l'unité
@@ -98,6 +108,7 @@ def FFT(P, c):     # on dit que P c'est une liste c'est plus pratique
     return liste_polynome_evalue
 
 
+
 # fonction qui scinde le polynome en deux et évalue et tout et tout
 def FFT_finale(P):
     liste_polynomes_separes = separation_polynome_paire_impaire(P)
@@ -107,10 +118,12 @@ def FFT_finale(P):
 
     liste_polynome_paire_evalue = FFT(liste_polynomes_separes[0], 0)
     liste_polynome_impaire_evalue = FFT(liste_polynomes_separes[1], 1)
-    # donc là on a chaque liste avec le polynome évalué en les 2n racines de l'unité
-    # i.e. les deux parties de l'addition suivante
-    # P(z) = P^(p)(z) + zP^(i)(z)
-    # on additionne tout membre à membre et c'est ok on aura ce qu'on veut
+    """ 
+    donc là on a chaque liste avec le polynome évalué en les 2n racines de l'unité
+    i.e. les deux parties de l'addition suivante
+    P(z) = P^(p)(z) + zP^(i)(z)
+    on additionne tout membre à membre et c'est ok on aura ce qu'on veut
+    """
     
     # print pour tester
     #print(liste_polynome_paire_evalue)
@@ -122,16 +135,36 @@ def FFT_finale(P):
     return liste_polynome_evalue
 
 
+## 2.2.4
+# fonction pour faire la multiplication
+def mult_Px_Py(liste_P_x, liste_P_y):
+    liste_polynome_final = []
+    liste_polynome_x = FFT_finale(liste_P_x)
+    liste_polynome_y = FFT_finale(liste_P_y)
+
+    #pour la longueur des deux (qui sont censé être de la même taille
+    for k in range (len(liste_polynome_x)):
+        X = liste_polynome_x[k] * liste_polynome_y[k]
+        liste_polynome_final.append(X)
+
+    return liste_polynome_final
+
+
 
 ############################################ EXECUTION #############################################
 
 #print (Multiplication_Ecoleprimaire(3,4))
 
-#print(separation_polynome_paire_impaire(liste_P))
+#print(separation_polynome_paire_impaire(liste_P_x))
+#print(separation_polynome_paire_impaire(liste_P_y))
 
 #print (racines_un(10))
 
 #print (FFT(liste_P,0))
+
+#print (FFT_finale(liste_P_x))
+#print (FFT_finale(liste_P_y))
+
 print ("-------------------------------------------------------------------------------")
-print (FFT_finale(liste_P))
+print(mult_Px_Py(liste_P_x,liste_P_y))
 print ("-------------------------------------------------------------------------------")
