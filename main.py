@@ -73,12 +73,11 @@ def racines_un(n):
 def FFT(P, c):     # on dit que P c'est une liste c'est plus pratique
     # si c = 1 on fait toute la liste * z
     # si c = 0 on fait rien
-    liste_racine_unite = []
     liste_racine_unite = racines_un(len(P))     # on récupère le nombre de racines de l'unité voulu
     liste_polynome_evalue = []      # liste retournée à la fin
 
-    for o in range (len(liste_racine_unite)):       # on met déjà x_0 partout pcq ça dépend pas de w et sinon ça fai une erreur avec log(0) en dessous
-        liste_polynome_evalue.append(liste_P[0])
+    for o in range (len(liste_racine_unite)):       # on met déjà x_0 partout pcq ça dépend pas de w
+        liste_polynome_evalue.append(P[0])
     #print (liste_polynome_evalue)
 
     for k in range (len(liste_racine_unite)):       # de 0 à 2n-1 (pour toutes les racines unité on évalue le polynome en ces racines)
@@ -86,8 +85,9 @@ def FFT(P, c):     # on dit que P c'est une liste c'est plus pratique
         w2 = w*w     # pour avoir z² comme dans l'énoncé
 
         for i in range (1,len(P)):        # de 0 à n-1 (pour tous les coeff du polynome à part le 0, mais traité avant donc oklm)
-            x = P[i]        # x indice i  
-            w2_puissance_i = cmath.exp(w2 * cmath.log(i))       # on fait w^(2i)
+            x = P[i]        # x_i
+            # on fait w^(2i) (en passant à l'exponentielle sinon ça marche pas avec les complexes jsp pq)  
+            w2_puissance_i = cmath.exp(i * cmath.log(w2))       
             liste_polynome_evalue[k]  = liste_polynome_evalue[k] + x * w2_puissance_i     # P(w) = x_0 * w^0 + x_1 * w^1 + ...
                   
         if c == 1:      # si c'est la liste du polynome impaire faut faire tout * z (ici z = w)
@@ -131,6 +131,7 @@ def FFT_finale(P):
 
 #print (racines_un(10))
 
-print (FFT(liste_P,0))
+#print (FFT(liste_P,0))
 print ("-------------------------------------------------------------------------------")
 print (FFT_finale(liste_P))
+print ("-------------------------------------------------------------------------------")
