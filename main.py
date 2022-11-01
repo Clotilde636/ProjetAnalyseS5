@@ -99,6 +99,7 @@ def FFT(P, c):     # on dit que P c'est une liste c'est plus pratique
             # on fait w^(2i) (en passant à l'exponentielle sinon ça marche pas avec les complexes jsp pq)  
             w2_puissance_i = cmath.exp(i * cmath.log(w2))       
             liste_polynome_evalue[k]  = liste_polynome_evalue[k] + x * w2_puissance_i     # P(w) = x_0 * w^0 + x_1 * w^1 + ...
+            print(liste_polynome_evalue[k])
                   
         if c == 1:      # si c'est la liste du polynome impaire faut faire tout * z (ici z = w)
             for s in range (len(liste_polynome_evalue)):
