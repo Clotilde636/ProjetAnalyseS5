@@ -158,6 +158,7 @@ def FFTrecursif(P):
         return P
 
     else:
+        print("else")
         w = cmath.exp((2*pi)/(2*n) *1j)
 
         y = []
