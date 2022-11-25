@@ -142,41 +142,63 @@ def FFT_finale(P):
 
 # essai avec un programme récursif insh c'est mieux
 def FFTrecursif(P):
-    polynome_P_I = separation_polynome_paire_impaire(P)
-    polynome_P = polynome_P_I[0]
-    polynome_I = polynome_P_I[1]
 
-    n = len(P)
-    nsur2 = n/2
-    #print(nsur2)
-    int(nsur2)
-    #print(nsur2)
-    #print(type(nsur2))
-
-    print(n)
+    n = len(P)      # n = longueur de P
     if n==1:
         return P
 
-    else:
-        print("else")
-        w = cmath.exp((2*pi)/(2*n) *1j)
+    w = cmath.exp((2*pi)/(2*n) *1j)     # w = omega
 
-        y = []
-        y_P = FFTrecursif(polynome_P)
-        y_I = FFTrecursif(polynome_I)
+    polynome_P_I = separation_polynome_paire_impaire(P)     # on sépare le polynome en deux
+    polynome_P = polynome_P_I[0]        # le 1er de la piste est paire
+    polynome_I = polynome_P_I[1]        # le 2nd de la liste est impaire
 
-        for k in range (nsur2):
-            A = y_P[k] + w**k * y_I(k)
-            y.append(A)
+    y_P = FFTrecursif(polynome_P)
+    y_I = FFTrecursif(polynome_I)
 
-        for k in range (nsur2, n):
-            A = y_P[k] - w**k * y_I(k)
-            y.append(A)
+    print(n)
+
+    print("else")
+
+    y = []
+
+    for k in range (n/2):
+        print("oui 1")
+        A = y_P[k] + w**k * y_I(k)
+        y.append(A)
+
+    for k in range (n/2, n):
+        print("oui 2")
+        A = y_P[k] - w**k * y_I(k)
+        y.append(A)
     
-        return y
+    return y
 
 
+########## algo internet
+def FFTinternet(x):
+    """
+    A recursive implementation of 
+    the 1D Cooley-Tukey FFT, the 
+    input should have a length of 
+    power of 2. 
+    """
+    N = len(x)
+    
+    if N == 1:
+        return x
+    else:
+        X_even = FFTinternet(x[::2])
+        X_odd = FFTinternet(x[1::2])
+        factor = \
+          np.exp(-2j*np.pi*np.arange(N)/ N)
+        
+        X = np.concatenate(\
+            [X_even+factor[:int(N/2)]*X_odd,
+             X_even+factor[int(N/2):]*X_odd])
+        return X
 
+########################
 
 ## 2.2.4
 # fonction pour faire la multiplication
@@ -211,4 +233,5 @@ def mult_Px_Py(liste_P_x, liste_P_y):
 print ("-------------------------------------------------------------------------------")
 print (FFTrecursif(liste_P_x))
 #print(mult_Px_Py(liste_P_x,liste_P_y))
+#print(FFTinternet(liste_P_y))
 print ("-------------------------------------------------------------------------------")
