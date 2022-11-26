@@ -1,8 +1,8 @@
 from random import *
 from math import *
-#from cmath import *
-import cmath
-from re import L
+from cmath import *
+import numpy as np
+
 
 #Fonction qui transforme un nombre en liste
 def Nombre_Liste (nombre):
@@ -51,11 +51,7 @@ def separation_polynome_paire_impaire(liste_P):
 
     for i in range (0, len(liste_P)-1, 2):
         liste_P_paire.append(liste_P[i])
-        #liste_P_paire.append(0)
-        #print(liste_P_paire)
-        #liste_P_impaire.append(0)
         liste_P_impaire.append(liste_P[i+1])
-        #print(liste_P_impaire)
     
     liste_P_finale.append(liste_P_paire)
     liste_P_finale.append(liste_P_impaire)
@@ -142,8 +138,13 @@ def FFT_finale(P):
 
 # essai avec un programme récursif insh c'est mieux
 def FFTrecursif(P):
-
+    print ("je rentre ")
+    print(P)
+    
     n = len(P)      # n = longueur de P
+    print ("n = ")
+    print (n)
+
     if n==1:
         return P
 
@@ -155,10 +156,6 @@ def FFTrecursif(P):
 
     y_P = FFTrecursif(polynome_P)
     y_I = FFTrecursif(polynome_I)
-
-    print(n)
-
-    print("else")
 
     y = []
 
@@ -231,7 +228,7 @@ def mult_Px_Py(liste_P_x, liste_P_y):
 #print (FFT_finale(liste_P_y))
 
 print ("-------------------------------------------------------------------------------")
-print (FFTrecursif(liste_P_x))
+#print (FFTrecursif(liste_P_x))
 #print(mult_Px_Py(liste_P_x,liste_P_y))
-#print(FFTinternet(liste_P_y))
+print(FFTinternet(liste_P_y))
 print ("-------------------------------------------------------------------------------")
