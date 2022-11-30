@@ -1,7 +1,6 @@
 from random import *
 from math import *
 from cmath import *
-import numpy as np
 
 
 #Fonction qui transforme un nombre en liste
@@ -75,7 +74,7 @@ def racines_un(n):
 
 
 
-# fonction pour évaluer un polynôme en ces 2n racines de l'unité
+"""# fonction pour évaluer un polynôme en ces 2n racines de l'unité
 def FFT(P, c):     # on dit que P c'est une liste c'est plus pratique
     # si c = 1 on fait toute la liste * z
     # si c = 0 on fait rien
@@ -96,11 +95,11 @@ def FFT(P, c):     # on dit que P c'est une liste c'est plus pratique
             w2_puissance_i = cmath.exp(i * cmath.log(w2))       
             liste_polynome_evalue[k]  = liste_polynome_evalue[k] + x * w2_puissance_i     # P(w) = x_0 * w^0 + x_1 * w^1 + ...
 
-        """ 
+        """ """
         Ici en vrai je fais des calculs en trop pcq pour le polynome paire les indices impaires c'est 0
         Et donc je calcule w²^i  pour rien et j'ajoute à ma liste pour rien
         Mais ça évite de faire deux méthodes FFT donc je laisse par flemme
-        """
+        """"""
                   
         if c == 1:      # si c'est la liste du polynome impaire faut faire tout * z (ici z = w)
             for s in range (len(liste_polynome_evalue)):
@@ -120,12 +119,12 @@ def FFT_finale(P):
 
     liste_polynome_paire_evalue = FFT(liste_polynomes_separes[0], 0)
     liste_polynome_impaire_evalue = FFT(liste_polynomes_separes[1], 1)
-    """ 
+    """ """
     donc là on a chaque liste avec le polynome évalué en les 2n racines de l'unité
     i.e. les deux parties de l'addition suivante
     P(z) = P^(p)(z) + zP^(i)(z)
     on additionne tout membre à membre et c'est ok on aura ce qu'on veut
-    """
+    """"""
     
     # print pour tester
     #print(liste_polynome_paire_evalue)
@@ -135,83 +134,83 @@ def FFT_finale(P):
         liste_polynome_evalue.append( liste_polynome_paire_evalue[k] + liste_polynome_impaire_evalue[k] )
 
     return liste_polynome_evalue
+    """
 
-# essai avec un programme récursif insh c'est mieux
-def FFTrecursif(P):
-    print ("je rentre ")
-    print(P)
+# méthode FFT
+def FFT(P):
     
     n = len(P)      # n = longueur de P
-    print ("n = ")
-    print (n)
+
+    """polynome_P_I = separation_polynome_paire_impaire(P)     # on sépare le polynome en deux
+    polynome_P = polynome_P_I[0]        # le 1er de la piste est paire
+    polynome_I = polynome_P_I[1]        # le 2nd de la liste est impaire"""
 
     if n==1:
         return P
 
-    w = cmath.exp((2*pi)/(2*n) *1j)     # w = omega
-
-    polynome_P_I = separation_polynome_paire_impaire(P)     # on sépare le polynome en deux
-    polynome_P = polynome_P_I[0]        # le 1er de la piste est paire
-    polynome_I = polynome_P_I[1]        # le 2nd de la liste est impaire
-
-    y_P = FFTrecursif(polynome_P)
-    y_I = FFTrecursif(polynome_I)
-
-    y = []
-
-    for k in range (n/2):
-        print("oui 1")
-        A = y_P[k] + w**k * y_I(k)
-        y.append(A)
-
-    for k in range (n/2, n):
-        print("oui 2")
-        A = y_P[k] - w**k * y_I(k)
-        y.append(A)
-    
-    return y
-
-
-########## algo internet
-def FFTinternet(x):
-    """
-    A recursive implementation of 
-    the 1D Cooley-Tukey FFT, the 
-    input should have a length of 
-    power of 2. 
-    """
-    N = len(x)
-    
-    if N == 1:
-        return x
     else:
-        X_even = FFTinternet(x[::2])
-        X_odd = FFTinternet(x[1::2])
-        factor = \
-          np.exp(-2j*np.pi*np.arange(N)/ N)
+        polynome_P_I = separation_polynome_paire_impaire(P)     # on scinde le polynome en deux
+        polynome_P = polynome_P_I[0] 
+        polynome_I = polynome_P_I[1] 
         
-        X = np.concatenate(\
-            [X_even+factor[:int(N/2)]*X_odd,
-             X_even+factor[int(N/2):]*X_odd])
-        return X
+        y_P = FFT(polynome_P)       # partie récursive
+        y_I = FFT(polynome_I)       # on rappelle la méthode pour rescinder les polynomes
+    
+        w = np.exp(-2j * np.pi * np.arange(n) / n)      # liste avec tous les w^(qqch) pour évaluer après
+        
+        y1 = y_P + w[:int(n/2)] * y_I
+        y2 = y_P + w[int(n/2):] * y_I
+        y = np.concatenate([y1, y2])        # on concatene les listes comme il faut
+    
+        return y
 
 ########################
 
 ## 2.2.4
-# fonction pour faire la multiplication
-def mult_Px_Py(liste_P_x, liste_P_y):
-    liste_polynome_final = []
-    liste_polynome_x = FFT_finale(liste_P_x)
-    liste_polynome_y = FFT_finale(liste_P_y)
 
-    #pour la longueur des deux (qui sont censé être de la même taille
-    for k in range (len(liste_polynome_x)):
-        X = liste_polynome_x[k] * liste_polynome_y[k]
-        liste_polynome_final.append(X)
+def mult(P,Q):
+    
+    n = len(P)
+    
+    FFT_P = FFT(P)
+    FFT_Q = FFT(Q)
+    PQ = [0]*(2*n-1)
+    
+    for i in range (n):
+        for j in range (n):
+            m = FFT_P[i] * FFT_Q[j]
+            PQ[i+j] = m + PQ[i+j]
+            
+    return PQ
+    
+    
+# 2.3.1   
+def IFFT(P):
+       
+    n = len(P)      # n = longueur de P
 
-    return liste_polynome_final
+    """polynome_P_I = separation_polynome_paire_impaire(P)     # on sépare le polynome en deux
+    polynome_P = polynome_P_I[0]        # le 1er de la piste est paire
+    polynome_I = polynome_P_I[1]        # le 2nd de la liste est impaire"""
 
+    if n==1:
+        return P
 
+    else:
+        polynome_P_I = separation_polynome_paire_impaire(P)     # on scinde le polynome en deux
+        polynome_P = polynome_P_I[0] 
+        polynome_I = polynome_P_I[1] 
+        
+        y_P = FFT(polynome_P)       # partie récursive
+        y_I = FFT(polynome_I)       # on rappelle la méthode pour rescinder les polynomes
+    
+        w = np.exp(2j * np.pi * np.arange(n) / n)/n      # liste avec tous les w^(qqch) pour évaluer après
+        print("oui")
+        y1 = y_P + w[:int(n/2)] * y_I
+        y2 = y_P + w[int(n/2):] * y_I
+        y = np.concatenate([y1, y2])        # on concatene les listes comme il faut
+    
+        return y   
 
 ############################################ EXECUTION #############################################
 
